@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import heroBg from "@assets/generated_images/abstract_dark_tech_geometric_background.png";
-import profileImg from "@assets/generated_images/professional_portrait_of_a_male_developer.png";
+import profileImg from "@assets/p1_1765020617332.jpg";
 
 export default function Home() {
   const { scrollY } = useScroll();

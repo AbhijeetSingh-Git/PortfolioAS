@@ -33,13 +33,19 @@ export default function Contact() {
     const subject = encodeURIComponent(`Portfolio Contact from ${values.name}`);
     const body = encodeURIComponent(`Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`);
     const mailtoLink = `mailto:abhijeetsinghgautam51@gmail.com?subject=${subject}&body=${body}`;
-
-    // Open default email client
-    window.location.href = mailtoLink;
+    
+    // Create a temporary link element and click it programmatically
+    // This is more reliable than window.location.href for mailto links
+    const link = document.createElement('a');
+    link.href = mailtoLink;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
     toast({
       title: "Opening Email Client",
-      description: "Redirecting you to your email app to send the message.",
+      description: "Please verify the email content and click send in your email app.",
     });
     
     form.reset();

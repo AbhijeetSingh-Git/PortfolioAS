@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowRight, Download, Code2, Database, Brain, Globe } from "lucide-react";
+import { ArrowRight, Download, Code2, Database, Brain, Globe, Sparkles } from "lucide-react";
 import { personalInfo, skills, projects } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,68 +9,88 @@ import heroBg from "@assets/generated_images/abstract_dark_tech_geometric_backgr
 import profileImg from "@assets/generated_images/professional_portrait_of_a_male_developer.png";
 
 export default function Home() {
-  const container = {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -100]);
+
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.1,
+        delayChildren: 2.2 // Wait for preloader
       }
     }
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
+  const item: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        type: "spring", 
+        stiffness: 50 
+      } 
+    }
   };
 
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+        <motion.div 
+          style={{ y: y1 }}
+          className="absolute inset-0 z-0"
+        >
           <img 
             src={heroBg} 
             alt="Background" 
-            className="w-full h-full object-cover opacity-40 dark:opacity-40 opacity-10"
+            className="w-full h-full object-cover opacity-40 dark:opacity-40 opacity-10 scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-        </div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+        </motion.div>
 
-        <div className="container mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center pt-20">
           <motion.div 
             initial="hidden"
             animate="show"
             variants={container}
-            className="space-y-6"
+            className="space-y-8"
           >
             <motion.div variants={item}>
-               <Badge variant="outline" className="px-4 py-1 border-primary/20 bg-primary/5 text-primary/80 backdrop-blur-sm">
+               <Badge variant="outline" className="px-4 py-2 border-primary/20 bg-primary/5 text-primary/80 backdrop-blur-sm rounded-full flex w-fit items-center gap-2">
+                 <span className="relative flex h-2 w-2">
+                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                 </span>
                  Available for work
                </Badge>
             </motion.div>
             
-            <motion.h1 variants={item} className="text-5xl md:text-7xl font-heading font-bold leading-tight">
+            <motion.h1 variants={item} className="text-6xl md:text-8xl font-heading font-bold leading-[0.9] tracking-tighter">
               Hello, I'm <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground to-foreground/50">
                 {personalInfo.name}
               </span>
             </motion.h1>
 
-            <motion.p variants={item} className="text-xl text-muted-foreground max-w-lg leading-relaxed">
+            <motion.p variants={item} className="text-xl md:text-2xl text-muted-foreground max-w-lg leading-relaxed">
               {personalInfo.role} based in {personalInfo.location}. 
-              Building intelligent systems and beautiful interfaces.
+              Building <span className="text-foreground font-semibold">intelligent systems</span> and <span className="text-foreground font-semibold">beautiful interfaces</span>.
             </motion.p>
 
-            <motion.div variants={item} className="flex gap-4 pt-4">
+            <motion.div variants={item} className="flex flex-wrap gap-4 pt-4">
               <Link href="/projects">
-                <Button size="lg" className="rounded-full px-8 bg-primary text-primary-foreground hover:bg-primary/90">
-                  View Projects
+                <Button size="lg" className="rounded-full px-8 h-14 text-lg bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg shadow-primary/20">
+                  View Projects <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full px-8 border-border bg-muted/20 backdrop-blur-sm hover:bg-muted/40">
+                <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-border bg-background/50 backdrop-blur-sm hover:bg-background/80 hover:scale-105 transition-all duration-300">
                   Contact Me
                 </Button>
               </Link>
@@ -79,34 +99,48 @@ export default function Home() {
 
           {/* Profile Image - Floats/Parallax */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{ y: y2 }}
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 1, delay: 2.4, type: "spring" }}
             className="relative hidden md:flex justify-center"
           >
-            <div className="relative w-80 h-96 rounded-2xl overflow-hidden border border-border shadow-2xl shadow-primary/20 group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+            <div className="relative w-80 h-[500px] rounded-full overflow-hidden border-4 border-background shadow-2xl shadow-primary/20 group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/40 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500 z-10 mix-blend-overlay" />
               <img 
                 src={profileImg} 
                 alt="Abhijeet Singh" 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
             </div>
             {/* Decorative elements */}
-            <div className="absolute -z-10 -top-10 -right-10 w-40 h-40 border border-border rounded-full animate-spin-slow" />
-            <div className="absolute -z-10 top-1/2 -left-20 w-60 h-60 bg-primary/5 rounded-full blur-3xl" />
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -z-10 top-10 right-10 w-60 h-60 border border-dashed border-primary/20 rounded-full" 
+            />
+            <motion.div 
+              animate={{ rotate: -360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              className="absolute -z-10 bottom-10 left-0 w-80 h-80 border border-primary/10 rounded-full" 
+            />
+            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl" />
           </motion.div>
         </div>
         
         {/* Scroll Indicator */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 3, duration: 1 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/50"
         >
           <span className="text-xs uppercase tracking-widest">Scroll</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-muted-foreground/20 to-transparent" />
+          <motion.div 
+            animate={{ height: [20, 40, 20] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-[1px] bg-gradient-to-b from-transparent via-primary to-transparent" 
+          />
         </motion.div>
       </section>
 

@@ -29,15 +29,20 @@ export default function Contact() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Mock API call
-    console.log(values);
-    setTimeout(() => {
-      toast({
-        title: "Message Sent",
-        description: "Thanks for reaching out! I'll get back to you soon.",
-      });
-      form.reset();
-    }, 1000);
+    // Construct mailto link
+    const subject = encodeURIComponent(`Portfolio Contact from ${values.name}`);
+    const body = encodeURIComponent(`Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`);
+    const mailtoLink = `mailto:abhijeetsinghgautam51@gmail.com?subject=${subject}&body=${body}`;
+
+    // Open default email client
+    window.location.href = mailtoLink;
+
+    toast({
+      title: "Opening Email Client",
+      description: "Redirecting you to your email app to send the message.",
+    });
+    
+    form.reset();
   }
 
   return (

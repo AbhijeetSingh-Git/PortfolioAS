@@ -3,11 +3,21 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactMessageSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
+import nodemailer from "nodemailer";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Initialize nodemailer transporter for Gmail
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+
   app.post("/api/contact", async (req, res) => {
     try {
       const result = insertContactMessageSchema.safeParse(req.body);
@@ -20,31 +30,22 @@ export async function registerRoutes(
 
       const contactMessage = await storage.createContactMessage(result.data);
 
-      if (process.env.RESEND_API_KEY) {
+      // Send email using Nodemailer if credentials are set
+      if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
         try {
-          const response = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              from: "Portfolio Contact <onboarding@resend.dev>",
-              to: "abhijeetsinghgautam51@gmail.com",
-              subject: `New Contact from ${result.data.name}`,
-              html: `
-                <h2>New Contact Message</h2>
-                <p><strong>Name:</strong> ${result.data.name}</p>
-                <p><strong>Email:</strong> ${result.data.email}</p>
-                <p><strong>Message:</strong></p>
-                <p>${result.data.message}</p>
-              `,
-            }),
+          await transporter.sendMail({
+            from: process.env.GMAIL_USER,
+            to: "abhijeetsinghgautam51@gmail.com",
+            subject: `New Contact from ${result.data.name}`,
+            html: `
+              <h2>New Contact Message</h2>
+              <p><strong>Name:</strong> ${result.data.name}</p>
+              <p><strong>Email:</strong> ${result.data.email}</p>
+              <p><strong>Message:</strong></p>
+              <p>${result.data.message}</p>
+            `,
           });
-          
-          if (!response.ok) {
-            console.error("Failed to send email:", await response.text());
-          }
+          console.log(`Email sent to abhijeetsinghgautam51@gmail.com from ${result.data.email}`);
         } catch (emailError) {
           console.error("Email sending error:", emailError);
         }

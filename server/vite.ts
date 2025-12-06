@@ -22,7 +22,8 @@ export async function setupVite(server: Server, app: Express) {
       ...viteLogger,
       error: (msg, options) => {
         viteLogger.error(msg, options);
-        process.exit(1);
+        console.error("Vite error (non-fatal):", msg, options);
+        // Don't exit on error so server continues running for API testing
       },
     },
     server: serverOptions,

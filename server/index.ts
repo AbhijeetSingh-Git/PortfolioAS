@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
@@ -73,9 +74,10 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
+  // For debugging or CI you can skip Vite by setting SKIP_VITE=1
   if (process.env.NODE_ENV === "production") {
     serveStatic(app);
-  } else {
+  } else if (process.env.SKIP_VITE !== "1") {
     const { setupVite } = await import("./vite");
     await setupVite(httpServer, app);
   }
@@ -85,14 +87,27 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
-  httpServer.listen(
-    {
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    },
-    () => {
-      log(`serving on port ${port}`);
-    },
-  );
+  httpServer.listen(port, "127.0.0.1", () => {
+    log(`serving on port ${port}`);
+  });
+
+  // Handle shutdown signals
+  process.on("SIGINT", () => {
+    log("SIGINT received, closing gracefully...");
+    httpServer.close(() => {
+      process.exit(0);
+    });
+  });
+
+  process.on("uncaughtException", (err: any) => {
+    log(`Uncaught exception: ${err.message}`, "error");
+    console.error(err);
+    process.exit(1);
+  });
+
+  process.on("unhandledRejection", (reason: any) => {
+    log(`Unhandled rejection: ${reason}`, "error");
+    console.error(reason);
+    process.exit(1);
+  });
 })();

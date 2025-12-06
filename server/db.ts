@@ -1,4 +1,6 @@
 import * as schema from "@shared/schema";
+import fs from "fs";
+import path from "path";
 
 let db: any;
 
@@ -16,8 +18,6 @@ if (process.env.DATABASE_URL) {
   // SQLite mode (fallback for development without PostgreSQL)
   const { drizzle: drizzleSqlite } = await import("drizzle-orm/better-sqlite3");
   const Database = (await import("better-sqlite3")).default;
-  import fs from "fs";
-  import path from "path";
 
   // Use a file-backed SQLite database when SQLITE_DB_PATH is provided,
   // otherwise fall back to in-memory for ephemeral environments.

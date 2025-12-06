@@ -1,0 +1,10 @@
+node_modules
+dist
+\.env
+server-output.log
+*.log
+client/node_modules
+**/.git
+**/.github
+**/attached_assets
+***.sqlite

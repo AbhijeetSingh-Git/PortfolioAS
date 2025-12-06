@@ -16,9 +16,21 @@ if (process.env.DATABASE_URL) {
   // SQLite mode (fallback for development without PostgreSQL)
   const { drizzle: drizzleSqlite } = await import("drizzle-orm/better-sqlite3");
   const Database = (await import("better-sqlite3")).default;
-  
-  // Create an in-memory SQLite database
-  const sqlite = new Database(":memory:");
+  import fs from "fs";
+  import path from "path";
+
+  // Use a file-backed SQLite database when SQLITE_DB_PATH is provided,
+  // otherwise fall back to in-memory for ephemeral environments.
+  const sqlitePath = process.env.SQLITE_DB_PATH || ":memory:";
+
+  if (sqlitePath !== ":memory:") {
+    const dir = path.dirname(sqlitePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  }
+
+  const sqlite = new Database(sqlitePath);
   
   // Create tables manually for in-memory database
   sqlite.exec(`

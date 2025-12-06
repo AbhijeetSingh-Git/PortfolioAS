@@ -37,19 +37,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Navigation */}
       <header className="fixed top-0 w-full z-50 glass">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/">
-            <a className="text-xl font-heading font-bold tracking-tighter hover:opacity-80 transition-opacity">
-              AS<span className="text-primary/40">.</span>
-            </a>
+          <Link href="/" className="text-xl font-heading font-bold tracking-tighter hover:opacity-80 transition-opacity">
+            AS<span className="text-primary/40">.</span>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             {links.map((link) => (
-              <Link key={link.href} href={link.href}>
-                <a className={`text-sm font-medium transition-colors hover:text-primary relative group ${
+              <Link 
+                key={link.href} 
+                href={link.href}
+                className={`text-sm font-medium transition-colors hover:text-primary relative group ${
                   location === link.href ? "text-primary" : "text-muted-foreground"
-                }`}>
+                }`}
+              >
                   {link.label}
                   {location === link.href && (
                     <motion.span 
@@ -57,7 +58,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       className="absolute -bottom-1 left-0 w-full h-px bg-primary"
                     />
                   )}
-                </a>
               </Link>
             ))}
             
@@ -92,13 +92,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         >
           <nav className="flex flex-col gap-6 text-2xl font-heading font-light">
             {links.map((link) => (
-              <Link key={link.href} href={link.href}>
-                <a 
-                  onClick={() => setIsOpen(false)}
-                  className={location === link.href ? "text-primary" : "text-muted-foreground"}
-                >
+              <Link 
+                key={link.href} 
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={location === link.href ? "text-primary" : "text-muted-foreground"}
+              >
                   {link.label}
-                </a>
               </Link>
             ))}
           </nav>

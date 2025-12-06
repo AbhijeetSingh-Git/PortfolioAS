@@ -1,0 +1,144 @@
+Create a complete, modern, animated portfolio website using Next.js (App Router) with both frontend and backend.
+The portfolio must look premium, minimal, and visually attractive, with smooth animations using Framer Motion and Tailwind CSS.
+Use ShadCN UI components wherever suitable.
+Deploy-ready code required.
+
+📌 Requirements & Content
+🧑‍💻 About Me
+
+Name: Abhijeet Singh
+
+Based in: Prayagraj, Uttar Pradesh, India
+
+Profession: Full Stack Developer | Data Analytics | AI-ML Engineer | Software Engineer
+
+Summary:
+“I am a passionate Full-Stack and AI–ML developer with experience in building intelligent systems, analytics dashboards, and full-stack web apps. I love solving real-world problems using technology and enjoy working across ML, backend, and frontend development.”
+
+📚 Projects Section (With Cards + Modals)
+
+Create pages & cards for:
+
+Library Management System
+
+Description: A complete system for book issue/return, tracking, admin panel, and automated fine calculation.
+
+MAITRI – Multimodal AI Mental Health Assistant
+
+Offline AI system for astronauts
+
+Uses audio + video input
+
+Detects emotions
+
+Gives supportive conversation
+
+Self-trains based on feedback
+
+Add an AI-style layout with sci-fi vibes
+
+AI Mental Health Chatbot
+
+Conversational AI
+
+Sentiment detection
+
+Chat UI similar to ChatGPT
+
+Add animations
+
+🚀 Skills Section
+
+Represent all skills in a grid with icons + hover animations:
+
+Python
+
+Java
+
+SQL
+
+MongoDB
+
+Git
+
+Power BI
+
+Tableau
+
+JavaScript
+
+Node.js
+
+Next.js
+
+Tailwind CSS
+
+Figma
+
+WordPress
+
+📞 Contact Form (Backend Required)
+
+Create a working contact form with:
+
+Name
+
+Email
+
+Message
+
+Submit button
+
+Use API route /api/contact
+
+Store messages in MongoDB
+
+Add toast notifications
+
+Add success & error states
+
+Add validation
+
+🎨 UI & Design Requirements
+
+Use Next.js App Router
+
+Use Tailwind CSS + ShadCN UI
+
+Add Framer Motion animations (fade, slide, parallax)
+
+Animated hero section
+
+Smooth scrolling
+
+Dark + Light Mode Toggle
+
+Responsive design
+
+Add professional fonts (Inter, Poppins)
+
+📂 Pages to Include
+
+/ – Home (hero + intro + animations)
+
+/projects – Projects page
+
+/skills – Skills page
+
+/contact – Contact form (functional backend)
+
+/api/contact – Backend API route
+
+📌 Extra Features
+
+Add a modern navbar with animation
+
+Add footer with social links
+
+Add floating elements or particle effects in hero section
+
+Add SEO metadata
+
+Add favicon
+
+Add profile image placeholder

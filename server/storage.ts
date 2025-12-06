@@ -6,7 +6,7 @@ import {
   users,
   contactMessages 
 } from "@shared/schema";
-import { db } from "./db";
+import { dbPromise } from "./db";
 import { eq } from "drizzle-orm";
 
 export interface IStorage {
@@ -19,26 +19,31 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
+    const db = await dbPromise;
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
+    const db = await dbPromise;
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    const db = await dbPromise;
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async createContactMessage(message: InsertContactMessage): Promise<ContactMessage> {
+    const db = await dbPromise;
     const [contactMessage] = await db.insert(contactMessages).values(message).returning();
     return contactMessage;
   }
 
   async getContactMessages(): Promise<ContactMessage[]> {
+    const db = await dbPromise;
     return await db.select().from(contactMessages);
   }
 }
